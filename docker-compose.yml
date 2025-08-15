@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: claude-wp-devenv1
+    container_name: claude-wp-devenv2
     volumes:
       # Mount the host Docker socket to allow Docker in Docker
       - /var/run/docker.sock:/var/run/docker.sock
@@ -14,10 +14,10 @@ services:
       - ~/.ssh:/home/developer/.ssh:ro
     ports:
       # VS Code Server port
-      - "8085:8085"
+      - "8090:8080"
       # Additional ports for development
-      - "3015:3015"
-      - "9019:9019"
+      - "3010:3000"
+      - "9010:9000"
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       # Add any other required environment variables
@@ -31,7 +31,7 @@ services:
   # WordPress Container
   wordpress:
     image: wordpress:latest
-    container_name: claude-wp-wordpress1
+    container_name: claude-wp-wordpress2
     volumes:
       # Mount WordPress content for direct editing
       - ./wordpress:/var/www/html
@@ -46,7 +46,7 @@ services:
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DEBUG: 1
     ports:
-      - "8003:81"
+      - "8010:80"
     depends_on:
       - db
     restart: unless-stopped
@@ -56,10 +56,10 @@ services:
   # Database Container
   db:
     image: mysql:8.0
-    container_name: claude-wp-db1
+    container_name: claude-wp-db2
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data2:/var/lib/mysql
       - ./config/mysql:/etc/mysql/conf.d
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -67,20 +67,20 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
     ports:
-      - "13307:3307"
+      - "13316:3306"
     restart: unless-stopped
     networks:
       - wp-network
   
   # PhpMyAdmin (optional)
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: claude-wp-phpmyadmin1
+    image: arm64v8/phpmyadmin:latest
+    container_name: claude-wp-phpmyadmin2
     environment:
       PMA_HOST: db
-      PMA_PORT: 3307
+      PMA_PORT: 3306
     ports:
-      - "8082:80"
+      - "8091:80"
     depends_on:
       - db
     networks:
@@ -88,11 +88,11 @@ services:
 
 # Persistent Volumes
 volumes:
-  db_data:
-    name: claude-wp-db-data1
+  db_data2:
+    name: claude-wp-db-data2
 
 # Docker Networks
 networks:
   wp-network:
-    name: claude-wp-network
+    name: claude-wp-network2
     driver: bridge

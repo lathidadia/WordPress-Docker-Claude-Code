@@ -6,6 +6,7 @@ This project provides a complete development environment that combines:
 - **WordPress** - Fresh WordPress installation for development
 - **Remote accessibility** - Accessible from any device with a web browser
 - **Multi-instance support** - Run multiple isolated environments simultaneously
+- **Cross-platform support** - Works on both `x86_64` and `aarch64` (ARM64) architectures automatically.
 
 ## System Requirements
 
@@ -18,13 +19,12 @@ This project provides a complete development environment that combines:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/IncomeStreamSurfer/WordPress-Docker-Claude-Code.git
+   git clone https://github.com/lathidadia/WordPress-Docker-Claude-Code.git
    cd WordPress-Docker-Claude-Code
    ```
 
 2. Run the setup script:
    ```bash
-   chmod +x setup.sh
    ./setup.sh
    ```
 
@@ -44,11 +44,12 @@ This project provides a complete development environment that combines:
 
 ### Development Environment
 
-- **Ubuntu 22.04** base with all necessary development tools
-- **VS Code Server** with pre-installed extensions for web development
-- **Claude Code** CLI pre-installed and configured
-- **GitHub CLI** for easy repository management
-- **Docker CLI** for container management from within the environment
+- **Ubuntu 22.04** base with all necessary development tools.
+- **Cross-Platform:** Automatically detects and configures for `x86_64` and `aarch64` (ARM64) architectures.
+- **VS Code Server** with pre-installed extensions for web development.
+- **Claude Code** CLI pre-installed and configured.
+- **GitHub CLI** for easy repository management.
+- **Docker CLI** for container management from within the environment.
 
 ### WordPress Setup
 

@@ -31,6 +31,9 @@ if ! command -v docker-compose &> /dev/null; then
 fi
 
 # Create necessary directories
+echo -e "\n${YELLOW}Ensuring a clean environment by removing any existing containers and volumes...${NC}"
+docker-compose down --volumes
+
 echo -e "\n${YELLOW}Creating necessary directories...${NC}"
 mkdir -p wordpress
 mkdir -p config/mysql
@@ -51,6 +54,17 @@ PHPMYADMIN_PORT=$((8081 + $PORT_OFFSET))
 MYSQL_PORT=$((13306 + $PORT_OFFSET))
 DEV_PORT1=$((3000 + $PORT_OFFSET))
 DEV_PORT2=$((9000 + $PORT_OFFSET))
+
+# Detect system architecture
+ARCH=$(uname -m)
+PHPMYADMIN_IMAGE="phpmyadmin/phpmyadmin" # Default for x86_64
+
+if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    echo -e "\n${YELLOW}ARM64 architecture detected. Using ARM-compatible phpMyAdmin image.${NC}"
+    PHPMYADMIN_IMAGE="arm64v8/phpmyadmin:latest"
+else
+    echo -e "\n${YELLOW}AMD64/x86_64 architecture detected. Using standard phpMyAdmin image.${NC}"
+fi
 
 # Create or update docker-compose override file with dynamic ports
 cat > docker-compose.yml << EOF
@@ -130,7 +144,7 @@ services:
   
   # PhpMyAdmin (optional)
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: ${PHPMYADMIN_IMAGE}
     container_name: claude-wp-phpmyadmin${INSTANCE_ID}
     environment:
       PMA_HOST: db
